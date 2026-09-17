@@ -1,9 +1,0 @@
-{
-  "name": "호빵문고 — 무료 웹소설",
-  "short_name": "호빵문고",
-  "start_url": "./#/",
-  "display": "standalone",
-  "background_color": "#0b0d12",
-  "theme_color": "#0b0d12",
-  "icons": []
-}

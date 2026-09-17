@@ -4,9 +4,10 @@
 <title>호빵문고 — 웹소설 스토어</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="manifest" href="site.webmanifest"><link rel="stylesheet" href="styles.css">
 </head><body>
 <div id="scrollProgress" class="scroll-progress"></div>
+<div class="demo-banner" id="demoBanner" hidden><span class="demo-dot"></span><strong>DEMO</strong><span>테스트 결제 모드 · 실제 금액은 청구되지 않습니다</span></div>
 <header class="site-header" id="siteHeader">
 <a class="brand" href="#/"><span class="brand-mark">H</span><span>호빵문고</span></a>
-<nav class="top-nav"><a href="#/" data-nav="home">홈</a><a href="#/catalog" data-nav="catalog">장르</a><a href="#/store" data-nav="store">스토어</a><a href="#/my-library" data-nav="my-library">내 서재</a><button class="icon-btn" id="searchBtn" aria-label="검색">⌕</button><button class="account-btn" id="accountBtn">로그인</button></nav>
+<nav class="top-nav"><a href="#/" data-nav="home">홈</a><a href="#/catalog" data-nav="catalog">장르</a><a href="#/store" data-nav="store">스토어</a><a href="#/my-library" data-nav="my-library">내 서재</a><button class="search-trigger" id="searchBtn" aria-label="검색"><span>⌕</span><span class="search-label">검색</span><kbd>Ctrl K</kbd></button><button class="account-btn" id="accountBtn"><span class="account-dot"></span><span id="accountBtnText">로그인</span></button></nav>
 </header>
 <main id="app"></main>
 <nav class="mobile-nav"><a href="#/">⌂<span>홈</span></a><a href="#/catalog">▦<span>장르</span></a><button id="mobileSearch">⌕<span>검색</span></button><a href="#/my-library">▣<span>내서재</span></a><a href="#/profile">●<span>MY</span></a></nav>

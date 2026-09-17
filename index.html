@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d12" />
+  <meta name="description" content="호빵시티 이혼전쟁과 피자호빵맨 김우콩을 무료로 읽는 호빵문고." />
+  <meta property="og:title" content="호빵문고 — 무료 웹소설" />
+  <meta property="og:description" content="김치는 맵고, 사랑은 더 뜨겁다. 호빵시티 오리지널을 무료로 읽어보세요." />
+  <title>호빵문고 — 무료 웹소설</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="site.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="scrollProgress" class="scroll-progress"></div>
+  <header class="site-header" id="siteHeader">
+    <a class="brand" href="#/" aria-label="호빵문고 홈"><span class="brand-mark">H</span><span>호빵문고</span></a>
+    <nav class="top-nav" aria-label="주요 메뉴">
+      <a href="#/" data-nav="home">홈</a>
+      <a href="#/library" data-nav="library">작품</a>
+      <button class="icon-btn" id="searchBtn" aria-label="검색 열기">⌕</button>
+      <button class="icon-btn" id="themeBtn" aria-label="테마 변경">◐</button>
+    </nav>
+  </header>
+  <main id="app"></main>
+
+  <div class="search-layer" id="searchLayer" hidden>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="작품 검색">
+      <div class="search-head"><input id="searchInput" autocomplete="off" placeholder="작품, 인물, 챕터 검색…" /><button class="icon-btn" id="searchClose" aria-label="검색 닫기">×</button></div>
+      <div id="searchResults" class="search-results"></div>
+    </div>
+  </div>
+
+  <aside class="reader-panel" id="readerPanel" hidden>
+    <div class="panel-head"><strong>읽기 설정</strong><button class="icon-btn" id="panelClose">×</button></div>
+    <label>글자 크기 <output id="fontSizeOut"></output><input id="fontSize" type="range" min="16" max="26" step="1" /></label>
+    <label>줄 간격 <output id="lineHeightOut"></output><input id="lineHeight" type="range" min="1.5" max="2.2" step="0.05" /></label>
+    <label>본문 폭 <output id="widthOut"></output><input id="readerWidth" type="range" min="620" max="900" step="20" /></label>
+    <div class="segmented" id="fontMode"><button data-font="serif">명조</button><button data-font="sans">고딕</button></div>
+    <button class="secondary-btn full" id="resetPrefs">기본값으로</button>
+  </aside>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

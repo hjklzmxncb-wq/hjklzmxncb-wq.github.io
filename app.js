@@ -34,10 +34,75 @@ window.startPurchase=startPurchase;
 function openSearch(seed=''){const l=$('#searchLayer');l.hidden=false;$('#searchGenres').innerHTML=genres().map(g=>`<button class="chip" data-sg="${g}">${g}</button>`).join('');$$('[data-sg]').forEach(b=>b.onclick=()=>{$('#searchInput').value=b.dataset.sg==='전체'?'':b.dataset.sg;renderSearch($('#searchInput').value)});$('#searchInput').value=seed;renderSearch(seed);setTimeout(()=>$('#searchInput').focus(),30)} window.openSearch=openSearch;
 function renderSearch(q){q=q.trim().toLowerCase();const box=$('#searchResults');if(!q){box.innerHTML=works.map(w=>`<a class="search-item" href="#/work/${w.id}" onclick="closeSearch()"><strong>${w.title}</strong><small>${w.genre.join(' · ')} · ${money(w.price)}</small></a>`).join('');return}let hits=[];for(const w of works){const wm=[w.title,w.subtitle,w.description,...w.characters,...w.genre].join(' ').toLowerCase();if(wm.includes(q))hits.push({href:`#/work/${w.id}`,title:w.title,sub:w.genre.join(' · ')});w.chapters.forEach((c,i)=>{if((c.title+' '+c.paragraphs.slice(0,8).join(' ')).toLowerCase().includes(q))hits.push({href:`#/read/${w.id}/${i}`,title:c.title,sub:w.title})})}box.innerHTML=hits.slice(0,30).map(h=>`<a class="search-item" href="${h.href}" onclick="closeSearch()"><strong>${h.title}</strong><small>${h.sub}</small></a>`).join('')||'<div class="empty">검색 결과가 없습니다.</div>'}
 function closeSearch(){$('#searchLayer').hidden=true}window.closeSearch=closeSearch;
-let signup=false;function openAuth(){signup=false;syncAuthModal();$('#authLayer').hidden=false}window.openAuth=openAuth;
-function syncAuthModal(){$('#authTitle').textContent=signup?'회원가입':'로그인';$('#authSubmit').textContent=signup?'회원가입':'로그인';$('#authToggle').textContent=signup?'이미 계정이 있나요? 로그인':'처음이신가요? 회원가입';$('#authSetupNote').hidden=Auth.configured}
-$('#authToggle').onclick=()=>{signup=!signup;syncAuthModal()};$('#authClose').onclick=()=>$('#authLayer').hidden=true;$('#authLayer').onclick=e=>{if(e.target===$('#authLayer'))$('#authLayer').hidden=true};
-$('#authForm').onsubmit=async e=>{e.preventDefault();try{if(!Auth.configured)throw new Error('AUTH_NOT_CONFIGURED');const email=$('#authEmail').value.trim(),pw=$('#authPassword').value;const data=signup?await Auth.signUp(email,pw):await Auth.signIn(email,pw);if(signup&&!data.session)toast('확인 메일을 보냈습니다. 이메일 인증 후 로그인해주세요.');else toast(signup?'회원가입 완료!':'로그인 완료!');$('#authLayer').hidden=true}catch(err){toast(err.message==='AUTH_NOT_CONFIGURED'?'Supabase 설정을 먼저 연결해야 합니다.':(err.message||'인증 중 오류가 발생했습니다.'))}};
+let authMode='login';
+const rememberedEmail=localStorage.getItem('hoppang:remembered-email')||'';
+function openAuth(mode='login'){
+  authMode=mode;
+  syncAuthModal();
+  $('#authLayer').hidden=false;
+  setTimeout(()=>{const target=authMode==='update'?$('#authPassword'):$('#authEmail');target?.focus()},20)
+}
+window.openAuth=openAuth;
+function syncAuthModal(){
+  const isLogin=authMode==='login',isSignup=authMode==='signup',isReset=authMode==='reset',isUpdate=authMode==='update';
+  $('#authTitle').textContent=isLogin?'로그인':isSignup?'회원가입':isReset?'비밀번호 재설정':'새 비밀번호 설정';
+  $('#authSubtitle').textContent=isLogin?'한 번 로그인하면 로그아웃하기 전까지 이 브라우저에서 자동 로그인됩니다.':isSignup?'계정을 만들면 구매 내역과 읽던 위치를 여러 방문에 걸쳐 유지할 수 있어요.':isReset?'가입한 이메일로 비밀번호 재설정 링크를 보내드려요.':'새 비밀번호를 입력하면 바로 계정에 적용됩니다.';
+  $('#authEmailLabel').hidden=isUpdate;
+  $('#authPasswordLabel').hidden=isReset;
+  $('#authPasswordLabelText').textContent=isUpdate?'새 비밀번호':'비밀번호';
+  $('#authPassword').autocomplete=isSignup||isUpdate?'new-password':'current-password';
+  $('#authPassword').required=!isReset;
+  $('#authOptions').hidden=!isLogin;
+  $('#authDivider').hidden=isReset||isUpdate;
+  $('#socialLogin').hidden=isReset||isUpdate;
+  $('#authSubmit').textContent=isLogin?'로그인':isSignup?'회원가입':isReset?'재설정 메일 보내기':'비밀번호 변경';
+  $('#authToggle').hidden=isUpdate;
+  $('#authToggle').textContent=isSignup?'이미 계정이 있나요? 로그인':isReset?'로그인으로 돌아가기':'처음이신가요? 회원가입';
+  $('#sessionNote').textContent=isReset?'메일 발송 제한이 걸리면 잠시 기다렸다 다시 시도해주세요.':isUpdate?'변경 후 이 기기에서는 로그인 상태가 계속 유지됩니다.':'비밀번호는 저장하지 않습니다. 로그인 세션만 안전하게 유지합니다.';
+  $('#authSetupNote').hidden=Auth.configured;
+  if(!$('#authEmail').value&&rememberedEmail){$('#authEmail').value=rememberedEmail;$('#rememberEmail').checked=true}
+}
+function setAuthBusy(busy){
+  $('#authSubmit').disabled=busy;$('#googleLogin').disabled=busy;$('#githubLogin').disabled=busy;
+}
+$('#authToggle').onclick=()=>{authMode=authMode==='signup'?'login':authMode==='reset'?'login':'signup';syncAuthModal()};
+$('#authClose').onclick=()=>$('#authLayer').hidden=true;
+$('#authLayer').onclick=e=>{if(e.target===$('#authLayer'))$('#authLayer').hidden=true};
+$('#passwordToggle').onclick=()=>{const i=$('#authPassword');const show=i.type==='password';i.type=show?'text':'password';$('#passwordToggle').textContent=show?'숨기기':'보기'};
+$('#forgotPassword').onclick=()=>{authMode='reset';syncAuthModal()};
+$('#googleLogin').onclick=async()=>{try{setAuthBusy(true);await Auth.signInOAuth('google')}catch(err){setAuthBusy(false);toast(err.message||'Google 로그인 설정을 확인해주세요.')}};
+$('#githubLogin').onclick=async()=>{try{setAuthBusy(true);await Auth.signInOAuth('github')}catch(err){setAuthBusy(false);toast(err.message||'GitHub 로그인 설정을 확인해주세요.')}};
+$('#authForm').onsubmit=async e=>{
+  e.preventDefault();
+  try{
+    if(!Auth.configured)throw new Error('AUTH_NOT_CONFIGURED');
+    setAuthBusy(true);
+    const email=$('#authEmail').value.trim(),pw=$('#authPassword').value;
+    if($('#rememberEmail').checked&&email)localStorage.setItem('hoppang:remembered-email',email);else if(authMode==='login')localStorage.removeItem('hoppang:remembered-email');
+    if(authMode==='reset'){
+      if(!email)throw new Error('이메일을 입력해주세요.');
+      await Auth.requestPasswordReset(email);
+      toast('비밀번호 재설정 메일을 보냈습니다.');
+      authMode='login';syncAuthModal();
+    }else if(authMode==='update'){
+      if(pw.length<6)throw new Error('비밀번호는 6자 이상이어야 합니다.');
+      await Auth.updatePassword(pw);
+      toast('비밀번호를 변경했습니다.');
+      authMode='login';$('#authLayer').hidden=true;
+    }else if(authMode==='signup'){
+      const data=await Auth.signUp(email,pw);
+      if(!data.session)toast('확인 메일을 보냈습니다. 이메일 인증 후 로그인해주세요.');
+      else{toast('회원가입 완료!');$('#authLayer').hidden=true}
+    }else{
+      await Auth.signIn(email,pw);
+      toast('로그인 완료!');
+      $('#authLayer').hidden=true;
+    }
+  }catch(err){
+    toast(err.message==='AUTH_NOT_CONFIGURED'?'Supabase 설정을 먼저 연결해야 합니다.':(err.message||'인증 중 오류가 발생했습니다.'));
+  }finally{setAuthBusy(false)}
+};
+window.addEventListener('hoppang:password-recovery',()=>{authMode='update';syncAuthModal();$('#authLayer').hidden=false;setTimeout(()=>$('#authPassword')?.focus(),20)});
 $('#accountBtn').onclick=()=>authState.user?location.hash='#/profile':openAuth();$('#searchBtn').onclick=()=>openSearch();$('#mobileSearch').onclick=()=>openSearch();$('#searchClose').onclick=closeSearch;$('#searchInput').oninput=e=>renderSearch(e.target.value);$('#themeBtn').onclick=()=>{prefs.theme=prefs.theme==='dark'?'light':'dark';savePrefs()};$('#panelClose').onclick=()=>$('#readerPanel').hidden=true;$('#fontSize').oninput=e=>{prefs.fontSize=+e.target.value;savePrefs()};$('#lineHeight').oninput=e=>{prefs.lineHeight=+e.target.value;savePrefs()};$('#readerWidth').oninput=e=>{prefs.width=+e.target.value;savePrefs()};$$('#fontMode button').forEach(b=>b.onclick=()=>{prefs.font=b.dataset.font;savePrefs()});
 window.addEventListener('scroll',()=>{const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);$('#scrollProgress').style.width=(scrollY/max*100)+'%';$('#siteHeader').classList.toggle('scrolled',scrollY>10);clearTimeout(window.__st);window.__st=setTimeout(trackReader,120)},{passive:true});window.addEventListener('hashchange',route);window.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSearch();$('#authLayer').hidden=true;$('#readerPanel').hidden=true}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}});
-Auth.onChange(s=>{authState=s;$('#accountBtn').textContent=s.user?'MY':'로그인';route()});route();
+Auth.onChange(s=>{authState=s;$('#accountBtn').textContent=s.user?'MY':'로그인';if(s.user&&authMode!=='update')$('#authLayer').hidden=true;route()});route();

@@ -1,0 +1,9 @@
+{
+  "name": "호빵문고 — 웹소설 스토어",
+  "short_name": "호빵문고",
+  "start_url": "./#/",
+  "display": "standalone",
+  "background_color": "#0a0c10",
+  "theme_color": "#0a0c10",
+  "icons": []
+}

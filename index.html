@@ -1,0 +1,24 @@
+<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0c10"><meta name="description" content="호빵문고 — 1,000원에 소장하고 읽는 오리지널 웹소설">
+<title>호빵문고 — 웹소설 스토어</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="manifest" href="site.webmanifest"><link rel="stylesheet" href="styles.css">
+</head><body>
+<div id="scrollProgress" class="scroll-progress"></div>
+<header class="site-header" id="siteHeader">
+<a class="brand" href="#/"><span class="brand-mark">H</span><span>호빵문고</span></a>
+<nav class="top-nav"><a href="#/" data-nav="home">홈</a><a href="#/catalog" data-nav="catalog">장르</a><a href="#/store" data-nav="store">스토어</a><a href="#/my-library" data-nav="my-library">내 서재</a><button class="icon-btn" id="searchBtn" aria-label="검색">⌕</button><button class="account-btn" id="accountBtn">로그인</button></nav>
+</header>
+<main id="app"></main>
+<nav class="mobile-nav"><a href="#/">⌂<span>홈</span></a><a href="#/catalog">▦<span>장르</span></a><button id="mobileSearch">⌕<span>검색</span></button><a href="#/my-library">▣<span>내서재</span></a><a href="#/profile">●<span>MY</span></a></nav>
+
+<div class="search-layer" id="searchLayer" hidden><div class="search-panel"><div class="search-head"><input id="searchInput" placeholder="작품, 장르, 인물, 챕터 검색…"><button class="icon-btn" id="searchClose">×</button></div><div class="genre-chips" id="searchGenres"></div><div id="searchResults" class="search-results"></div></div></div>
+
+<div class="modal-layer" id="authLayer" hidden><div class="modal-card auth-card"><button class="modal-x" id="authClose">×</button><span class="eyebrow">MEMBERSHIP</span><h2 id="authTitle">로그인</h2><p class="modal-sub">구매 내역과 읽던 위치를 계정에 보관하세요.</p><form id="authForm"><label>이메일<input id="authEmail" type="email" required autocomplete="email" placeholder="you@example.com"></label><label>비밀번호<input id="authPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="6자 이상"></label><button class="primary-btn full" type="submit" id="authSubmit">로그인</button></form><button class="text-btn" id="authToggle">처음이신가요? 회원가입</button><div class="setup-note" id="authSetupNote" hidden>Supabase 설정을 연결하면 실제 회원가입/로그인이 활성화됩니다.</div></div></div>
+
+<aside class="reader-panel" id="readerPanel" hidden><div class="panel-head"><strong>읽기 설정</strong><button class="icon-btn" id="panelClose">×</button></div><label>글자 크기 <output id="fontSizeOut"></output><input id="fontSize" type="range" min="16" max="27" step="1"></label><label>줄 간격 <output id="lineHeightOut"></output><input id="lineHeight" type="range" min="1.5" max="2.25" step="0.05"></label><label>본문 폭 <output id="widthOut"></output><input id="readerWidth" type="range" min="620" max="920" step="20"></label><div class="segmented" id="fontMode"><button data-font="serif">명조</button><button data-font="sans">고딕</button></div><button class="secondary-btn full" id="themeBtn">라이트 / 다크</button></aside>
+
+<div id="toast" class="toast" hidden></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.tosspayments.com/v2/standard"></script>
+<script src="config.js"></script><script src="data.js"></script><script src="auth.js"></script><script src="app.js"></script>
+</body></html>

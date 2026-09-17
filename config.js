@@ -5,6 +5,6 @@ window.HOPPANG_CONFIG = {
   SUPABASE_URL: "https://gpsebzrdxgnrmcabcogx.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_0RZ_CR7gn4ILs_sXS5tIPQ_-Lx45UOn",
   TOSS_CLIENT_KEY: "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm",
-  API_BASE_URL: "",
+  API_BASE_URL: "https://gpsebzrdxgnrmcabcogx.supabase.co/functions/v1",
   TEST_MODE: true
 };
